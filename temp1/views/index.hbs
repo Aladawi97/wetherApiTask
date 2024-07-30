@@ -1,0 +1,64 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather Information</title>
+    <link rel="stylesheet" href="./css/style.css">
+</head>
+<body>
+ 
+    <form action="/weather">
+        <input type="text" name="address" placeholder="Enter address">
+        <button>Get Weather</button>
+    </form>
+
+    <div id="weatherResult">
+        <p id="cityName"></p>
+        <p id="longitude"></p>
+        <p id="latitude"></p>
+        <p id="temperature"></p>
+    </div>
+
+    <script>
+        const form = document.querySelector('form');
+        const cityNameElement = document.querySelector('#cityName');
+        const longitudeElement = document.querySelector('#longitude');
+        const latitudeElement = document.querySelector('#latitude');
+        const temperatureElement = document.querySelector('#temperature');
+
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+
+            const address = form.querySelector('input').value;
+            const weatherResult = document.querySelector('#weatherResult');
+            weatherResult.innerHTML = '';
+
+            fetch(`/weather?address=${address}`).then(response => response.json()).then(data => {
+                if (data.error) {
+                    weatherResult.innerHTML = data.error;
+                } else {
+                    cityNameElement.textContent = `Country: ${data.location}`;
+                    weatherResult.appendChild(cityNameElement);
+
+                    setTimeout(() => {
+                        longitudeElement.textContent = `Longitude: ${data.longtitude}`;
+                        weatherResult.appendChild(longitudeElement);
+                    }, 2000); 
+
+                    setTimeout(() => {
+                        latitudeElement.textContent = `Latitude: ${data.latitude}`;
+                        weatherResult.appendChild(latitudeElement);
+                    }, 4000); 
+
+                    setTimeout(() => {
+                        temperatureElement.textContent = `For Cast: ${data.forecast}`;
+                        weatherResult.appendChild(temperatureElement);
+                    }, 6000); 
+                }
+            });
+        });
+    </script>
+</body>
+</html>
